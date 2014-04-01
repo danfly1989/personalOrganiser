@@ -115,7 +115,7 @@ function displayForm() {
 
 }
 
-/* enables use of the CREATE button on the input form */
+/* Invoked by the cancel button on the input form */
 function putDataIn(form) {
 	var details = form.details.value;
 	var startTime = document.getElementById("startTime").value;
@@ -177,6 +177,13 @@ function putDataIn(form) {
 	} else {
 		appointments.removeChild(appointment);
 	}
+	
+	/* all below was added from cancel button */
+		document.getElementById("coverDiv").style.visibility = "hidden";
+	document.getElementById("formDiv").style.visibility = "hidden";
+	durationError.innerText = "";
+	errorText.innerText = "";
+	form.details.value = "";
 
 }
 
@@ -212,8 +219,9 @@ function inputIsOk(form) {
 
 }
 
-/* If this function is removed, it will still function but the form won't close
+/* If this function is removed, program will still function but the form won't close
 when the create button is clicked */
+
 function noOverlap() {
 	var duration = document.getElementById("duration").value;
 	durationHour = parseInt(duration);
