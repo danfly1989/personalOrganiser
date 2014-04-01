@@ -367,7 +367,7 @@ function tableCreate() {
 	}
 
 }
-/*
+
 function createDayTable() {
 
 
@@ -378,4 +378,4 @@ function createDayTable() {
 		cell.style.border = "1px solid black";
 	}
 	td.appendChild(innerTable);
-}*/
+}
