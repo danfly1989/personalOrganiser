@@ -325,10 +325,10 @@ function editAppointment(appointment) {
 	
 }
 
-/*removes selected appointment (onClick functionality of delete button)
+/*removes selected appointment (onClick functionality of delete button)*/
 function removeAppointment(appointment) {
 	appointment.parentNode.removeChild(appointment);
-}*/
+}
 
 
 /*Creates the main table */
