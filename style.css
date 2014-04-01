@@ -5,6 +5,7 @@ body {
 }
 
 
+
 .container {
 	max-width: 10%;
 }
@@ -15,7 +16,7 @@ body {
 	outline-offset: -2px;
 	background-color: #0000ff;
 	overflow : auto;
-	
+
 
 }
 
@@ -83,9 +84,11 @@ td{
     text-align: center;
 }
 
+
+
 #coverDiv {
-	/*position: absolute;*/
-	position: fixed;
+	position: absolute;
+	/*position: fixed;*/
 	top: 0px;
 	left: 0px;
 	z-index: 10;

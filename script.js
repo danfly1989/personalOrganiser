@@ -1,16 +1,29 @@
+// Attrb - http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
 
-var currentCell;
-var durationHour;
-var currentEditLeft;
-var currentEditTop;
-var currentEditWidth;
-var currentEditHeight;
-var normal = true;
+function capitalise(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+
+//declare variables
+var currentCell,
+	durationHour,
+	currentEditLeft,
+	currentEditTop,
+	currentEditWidth,
+	currentEditHeight,
+	normal = true;
 
 function expandTables() {
 	var hoursTable = document.getElementById("hours");
 	var monday = document.getElementById("monday");
-	var tuesday = document.getElementById("tuesday");
+		var tuesday = document.getElementById("tuesday");
+	var wednesday = document.getElementById("wednesday");
+	var thursday = document.getElementById("thursday");
+	var friday = document.getElementById("friday");
+	var saturday = document.getElementById("saturday");
+	var sunday = document.getElementById("sunday");
+
 	expandHours(hoursTable);
 	expandTable(monday);
 	expandTable(tuesday);
@@ -21,30 +34,39 @@ function expandTables() {
 	expandTable(sunday);
 }
 
+/* expand the hours table */
 function expandHours(hoursTable) {
 	createHeading(hoursTable);
 	createHours(hoursTable);
 }
 
+/* Creates headings and the rows which extend from them */
 function createHeading(table) {
 	var row = document.createElement('tr');
 	table.appendChild(row);
 	var heading = document.createElement('th');
 	row.appendChild(heading);
-	// heading.style.border = "1px solid black";
-	heading.innerHTML = table.id;
+	heading.innerHTML = capitalise(table.id); // Used capitalise function to prettify table names
+	//console.log(typeof table.id)
 }
 
+/* Creates the hours table and allows dependent columns to be created */
 function createHours(table) {
 	for (var i = 0; i < 24; i++) {
 		var row = document.createElement('tr');
 		table.appendChild(row);
 		var cell = row.insertCell();
+		var div = document.createElement("div");
+		cell.appendChild(div);
+		div.style.overflow = "auto";
+		div.appendChild(document.createElement("br"));
 		cell.style.border = "1px solid black";
+		cell.style.height = "24px";
 		cell.innerHTML = i + ":00";
 	}
 }
 
+/*Generic function to expand table which allows sub-tables to extend from hours table */
 function expandTable(table) {
 	createHeading(table);
 	for (var i = 0; i < 24; i++) {
@@ -66,6 +88,7 @@ function expandTable(table) {
 	}
 }
 
+/* seems to extend width of columns and not just display a form */
 function displayForm() {
 	document.getElementById("coverDiv").style.visibility = "visible";
 	var formDiv = document.getElementById("formDiv");
@@ -79,10 +102,10 @@ function displayForm() {
 	var startHour = currentCell.className;
 	var endHour = parseInt(currentCell.className) + 1;
 
-	if (startHour < 9) {
+	if (startHour < 12) {
 		startTime.value = "0" + startHour + ":00";
 		endTime.value = "0" + endHour + ":00";
-	} else if (startHour == 9) {
+	} else if (startHour == 12) {
 		startTime.value = "0" + startHour + ":00";
 		endTime.value = endHour + ":00";
 	} else {
@@ -92,6 +115,7 @@ function displayForm() {
 
 }
 
+/* enables use of the CREATE button on the input form */
 function putDataIn(form) {
 	var details = form.details.value;
 	var startTime = document.getElementById("startTime").value;
@@ -103,13 +127,13 @@ function putDataIn(form) {
 	durationMinutes = parseInt(split[1]);
 	("0" + durationHour).slice(-2);
 
-	if (durationInHours() > 8) {
+	if (durationInHours() > 12) {
 		durationError.innerText = " Duration must be 8 hours or less. ";
 		return;
 	}
 
 	if (endTime < startTime) {
-		durationError.innerText = " Appointment has to finish on the same day and can last at most 8 hours. ";
+		durationError.innerText = " The appointment cannot extend to multiple days. ";
 	
 		return;
 	}
@@ -126,7 +150,7 @@ function putDataIn(form) {
 		appointment.style.left = currentCell.getBoundingClientRect().left + "px";
 		appointment.style.top = currentCell.getBoundingClientRect().top + "px";
 		appointment.style.width = (currentCell.getBoundingClientRect().right - currentCell.getBoundingClientRect().left) + "px";
-		appointment.style.height = ((currentCell.getBoundingClientRect().bottom - currentCell.getBoundingClientRect().top) * durationInHours()) + "px";
+		appointment.style.height = (((currentCell.getBoundingClientRect().bottom - currentCell.getBoundingClientRect().top) * durationInHours())) + "px";
 
 	} else {
 		appointment.style.left = currentEditLeft;
@@ -139,15 +163,12 @@ function putDataIn(form) {
 	appointment.setAttribute("data-endTime", endTime);
 	appointment.setAttribute("data-details", details);
 	appointment.innerHTML = appointment.getAttribute("data-startTime") + " - " + appointment.getAttribute("data-endTime") + " " + appointment.getAttribute("data-details");
-	// appointment.innerHTML = "aaa";
 	appointment.style.background = colour.value;
 
 	var rect2;
 	rect2 = appointment.getBoundingClientRect();
-	// alert("updated appoi " + rect2.left + " " + rect2.right);
-	// alert(appointment.innerHTML);
+	
 	if (inputIsOk(form)) {
-		// alert(currentCell.getBoundingClientRect().top);
 		document.getElementById("formDiv").style.visibility = "hidden";
 		document.getElementById("coverDiv").style.visibility = "hidden";
 		durationError.innerText = "";
@@ -159,6 +180,7 @@ function putDataIn(form) {
 
 }
 
+/* allows divisibility of time periods */
 function durationInHours() {
 	var startTime = document.getElementById("startTime").value;
 	var endTime = document.getElementById("endTime").value;
@@ -170,6 +192,7 @@ function durationInHours() {
 	return durationHour + (durationMinutes / 60);
 }
 
+/* checks for valid input */
 function inputIsOk(form) {
 	var details = form.details.value;
 	var startTime = document.getElementById("startTime").value;
@@ -189,6 +212,8 @@ function inputIsOk(form) {
 
 }
 
+/* If this function is removed, it will still function but the form won't close
+when the create button is clicked */
 function noOverlap() {
 	var duration = document.getElementById("duration").value;
 	durationHour = parseInt(duration);
@@ -211,12 +236,14 @@ function noOverlap() {
 	return true;
 }
 
+/*Rectangle overlaps seem to work with or without this method, though bugs seem more common without it*/
 function rectangleOverlap(rect1, rect2) {
 	var overlap = !(rect1.right <= rect2.left || rect1.left >= rect2.right || rect1.bottom <= rect2.top || rect1.top >= rect2.bottom);
 	
 	return overlap;
 }
 
+/*invoked by the cancel button on the input form */
 function closeForm(form) {
 	document.getElementById("coverDiv").style.visibility = "hidden";
 	document.getElementById("formDiv").style.visibility = "hidden";
@@ -225,15 +252,18 @@ function closeForm(form) {
 	form.details.value = "";
 }
 
+/*Events cannot even be created without this function*/
 function displayImages() {
 
 	this.innerHTML = this.getAttribute("data-startTime") + " - " + this.getAttribute("data-endTime") + " " + this.getAttribute("data-details") + '<span class="pencil_icon" id="edit" onclick="editAppointment(this.parentNode)"></span> <span class="x_icon" id="close" onclick="removeAppointment(this.parentNode)"></span>';
 }
 
+/* Events also cannot be created without this */
 function removeImages() {
 	this.innerHTML = this.getAttribute("data-startTime") + " - " + this.getAttribute("data-endTime") + " " + this.getAttribute("data-details");
 }
 
+/*Required for createButton's onClick to work*/
 function mouseEnter(_fn) {
 	return function(_evt) {
 		var relTarget = _evt.relatedTarget;
@@ -245,6 +275,7 @@ function mouseEnter(_fn) {
 	};
 }
 
+/* allows the creation of multiple events, instead of stopping at one */
 function isAChildOf(_parent, _child) {
 	if (_parent === _child) {
 		return false;
@@ -256,6 +287,7 @@ function isAChildOf(_parent, _child) {
 	return _child === _parent;
 }
 
+/* edit selected appointment (onClick functionality of the edit button) */
 function editAppointment(appointment) {
 	currentCell = appointment;
 
@@ -285,17 +317,13 @@ function editAppointment(appointment) {
 	
 }
 
+/*removes selected appointment (onClick functionality of delete button)
 function removeAppointment(appointment) {
 	appointment.parentNode.removeChild(appointment);
-}
+}*/
 
-function test() {
-	alert("here");
-}
 
-function empty() {
-
-}
+/*Creates the main table */
 
 function createOutsideTable() {
 	var main = document.getElementById("main");
@@ -312,7 +340,6 @@ function createOutsideTable() {
 
 	}
 
-	// cell.innerHTML = "aaimg";
 	var tuesday = document.getElementById("tuesday");
 	td.innerHTML = "aaa";
 	tuesday.appendChild(tbl);
@@ -322,7 +349,6 @@ function tableCreate() {
 	var main = document.getElementById("main");
 	var tbl = document.createElement('table');
 	tbl.style.width = '100%';
-	tbl.style.border = "1px solid black";
 
 	var tr = tbl.insertRow();
 	main.appendChild(tbl);
@@ -330,11 +356,10 @@ function tableCreate() {
 
 		var td;
 		tr.appendChild(td);
-		td.innerHTML = "bbb";
 	}
 
 }
-
+/*
 function createDayTable() {
 
 
@@ -343,7 +368,6 @@ function createDayTable() {
 		innerTable.appendChild(row);
 		var cell = row.insertCell();
 		cell.style.border = "1px solid black";
-		cell.innerHTML = "aaa";
 	}
 	td.appendChild(innerTable);
-}
+}*/
