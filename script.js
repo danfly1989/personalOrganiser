@@ -4,7 +4,6 @@ function capitalise(string) {
 }
 
 /*Creates the main table */
-
 function createOutsideTable() {
 	var main = document.getElementById("main");
 	var table = document.createElement("table");
@@ -323,7 +322,7 @@ function isAChildOf(_parent, _child) {
 
 
 /* edit selected appointment (onClick functionality of the edit button) */
-//based heavily on code provided by Brendan Kehoe
+//based heavily on code provided to me by Brendan Kehoe
 function editAppointment(appointment) {
 	currentCell = appointment;
 
