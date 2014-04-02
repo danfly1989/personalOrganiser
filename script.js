@@ -1,7 +1,54 @@
 // Attrb - http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
-
 function capitalise(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+/*Creates the main table */
+
+function createOutsideTable() {
+	var main = document.getElementById("main");
+	var table = document.createElement("table");
+		var row = document.createElement("tr");
+	main.appendChild(table);
+		var cell = document.createElement("td");
+	table.appendChild(row);
+	row.appendChild(cell);
+	createHoursTable(cell);
+	for (var i = 0; i < 7; i++) {
+
+	}
+
+	var tuesday = document.getElementById("tuesday");
+	td.innerHTML = "...";
+	tuesday.appendChild(tbl);
+}
+
+//create a table
+function tableCreate() {
+	var main = document.getElementById("main");
+	var tbl = document.createElement('table');
+	tbl.style.width = '100%';
+
+	var tr = tbl.insertRow();
+	main.appendChild(tbl);
+	for (var i = 0; i < 7; i++) {
+
+		var td;
+		tr.appendChild(td);
+	}
+
+}
+
+/* create a 24 cell table for a specific day */
+function createDayTable() {
+
+
+	for ( j = 0; j < 24; j++) {
+		var row = document.createElement('tr');
+		innerTable.appendChild(row);
+		var cell = row.insertCell();
+	}
+	td.appendChild(innerTable);
 }
 
 
@@ -17,7 +64,7 @@ var currentCell,
 function expandTables() {
 	var hoursTable = document.getElementById("hours");
 	var monday = document.getElementById("monday");
-		var tuesday = document.getElementById("tuesday");
+	var tuesday = document.getElementById("tuesday");
 	var wednesday = document.getElementById("wednesday");
 	var thursday = document.getElementById("thursday");
 	var friday = document.getElementById("friday");
@@ -66,7 +113,7 @@ function createHours(table) {
 	}
 }
 
-/*Generic function to expand table which allows sub-tables to extend from hours table */
+/* allows sub-tables to extend from hours table */
 function expandTable(table) {
 	createHeading(table);
 	for (var i = 0; i < 24; i++) {
@@ -83,26 +130,27 @@ function expandTable(table) {
 		div.style.height = "24px";
 		div.style.width = window.innerWidth / 8 + "px";
 		div.style.overflow = "auto";
+		//creating br element eliminates some location bugs
 		div.appendChild(document.createElement("br"));
 
 	}
 }
 
-/* seems to extend width of columns and not just display a form */
+/*  Display a form as well as defining width */
 function displayForm() {
-	document.getElementById("coverDiv").style.visibility = "visible";
+	document.getElementById("mainBox").style.visibility = "visible";
 	var formDiv = document.getElementById("formDiv");
 	formDiv.style.visibility = "visible";
 	currentCell = this;
 	var box = document.getElementById("details");
-	box.cols = (window.innerWidth * 0.8) / 13;
+	box.cols = (window.innerWidth * 0.9) / 10;
 	var startTime = document.getElementById("startTime");
 	var endTime = document.getElementById("endTime");
 	document.getElementById("duration").value = "01:00";
 	var startHour = currentCell.className;
 	var endHour = parseInt(currentCell.className) + 1;
 
-	if (startHour < 12) {
+	if (startHour < 8) {
 		startTime.value = "0" + startHour + ":00";
 		endTime.value = "0" + endHour + ":00";
 	} else if (startHour == 12) {
@@ -116,24 +164,23 @@ function displayForm() {
 }
 
 /* Invoked by the cancel button on the input form */
-function putDataIn(form) {
+function enterDetails(form) {
 	var details = form.details.value;
 	var startTime = document.getElementById("startTime").value;
 	var endTime = document.getElementById("endTime").value;
-
 	var duration = document.getElementById("duration").value;
 	var split = duration.split(":");
-	durationHour = parseInt(duration);
-	durationMinutes = parseInt(split[1]);
+	durationHour = parseInt(0);
+	durationMinutes = parseInt(split[0]);
 	("0" + durationHour).slice(-2);
 
-	if (durationInHours() > 12) {
+	if (durationInHours() > 8) {
 		durationError.innerText = " Duration must be 8 hours or less. ";
 		return;
 	}
 
 	if (endTime < startTime) {
-		durationError.innerText = " The appointment cannot extend to multiple days. ";
+		durationError.innerText = " Appointments cannot extend to multiple days. ";
 	
 		return;
 	}
@@ -168,24 +215,26 @@ function putDataIn(form) {
 	var rect2;
 	rect2 = appointment.getBoundingClientRect();
 	
-	if (inputIsOk(form)) {
+	if (inputIsValid(form)) {
 		document.getElementById("formDiv").style.visibility = "hidden";
-		document.getElementById("coverDiv").style.visibility = "hidden";
+		document.getElementById("mainBox").style.visibility = "hidden";
 		durationError.innerText = "";
-		errorText.innerText = "";
+		warningMessage.innerText = "";
 		form.details.value = "";
 	} else {
 		appointments.removeChild(appointment);
 	}
 	
-	/* all below was added from cancel button */
-		document.getElementById("coverDiv").style.visibility = "hidden";
+	/* all below was added from cancel button 
+	and should ensure the form closes after creation*/
+	document.getElementById("coverDiv").style.visibility = "hidden";
 	document.getElementById("formDiv").style.visibility = "hidden";
 	durationError.innerText = "";
-	errorText.innerText = "";
+	warningMessage.innerText = "";
 	form.details.value = "";
 
 }
+
 
 /* allows divisibility of time periods */
 function durationInHours() {
@@ -200,49 +249,25 @@ function durationInHours() {
 }
 
 /* checks for valid input */
-function inputIsOk(form) {
+function inputIsValid(form) {
 	var details = form.details.value;
 	var startTime = document.getElementById("startTime").value;
 	var endTime = document.getElementById("endTime").value;
 	var duration = document.getElementById("duration").value;
-	var errorText = document.getElementById("errorText");
+	var warningMessage = document.getElementById("warningMessage");
 	if (details == "") {
-		errorText.innerText = "Must enter details. ";
+		warningMessage.innerText = "Enter relevant details. ";
 	}
 	if (duration == "") {
-		durationError.innerText = " Must enter duration. ";
+		durationError.innerText = " Enter appointment length. ";
 	}
 	if (endTime == "") {
-		durationError.innerText = " Must enter duration. ";
+		durationError.innerText = " Enter appointment length. ";
 	}
-	return details != "" && startTime != "" && endTime != "" && noOverlap();
+	return details != "" && startTime != "" && endTime != "";
 
 }
 
-/* If this function is removed, program will still function but the form won't close
-when the create button is clicked */
-
-function noOverlap() {
-	var duration = document.getElementById("duration").value;
-	durationHour = parseInt(duration);
-	var errorText = document.getElementById("errorText");
-	var appointments = document.getElementById("appointments");
-	var rect1 = appointments.lastChild.getBoundingClientRect();
-	var rect2;
-	rect2 = appointments.children[0].getBoundingClientRect();
-	
-	for (var i = 0; i < appointments.children.length - 1; i++) {
-
-		rect2 = appointments.children[i].getBoundingClientRect();
-
-	
-		if (rectangleOverlap(rect1, rect2)) {
-			errorText.innerText = "This appointment coincides with another appointment. ";
-			return false;
-		}
-	};
-	return true;
-}
 
 /*Rectangle overlaps seem to work with or without this method, though bugs seem more common without it*/
 function rectangleOverlap(rect1, rect2) {
@@ -253,10 +278,10 @@ function rectangleOverlap(rect1, rect2) {
 
 /*invoked by the cancel button on the input form */
 function closeForm(form) {
-	document.getElementById("coverDiv").style.visibility = "hidden";
+	document.getElementById("mainBox").style.visibility = "hidden";
 	document.getElementById("formDiv").style.visibility = "hidden";
 	durationError.innerText = "";
-	errorText.innerText = "";
+	warningMessage.innerText = "";
 	form.details.value = "";
 }
 
@@ -295,7 +320,10 @@ function isAChildOf(_parent, _child) {
 	return _child === _parent;
 }
 
+
+
 /* edit selected appointment (onClick functionality of the edit button) */
+//based heavily on code provided by Brendan Kehoe
 function editAppointment(appointment) {
 	currentCell = appointment;
 
@@ -307,7 +335,7 @@ function editAppointment(appointment) {
 	var appointments = document.getElementById("appointments");
 	appointments.removeChild(appointment);
 	var box = document.getElementById("details");
-	box.cols = (window.innerWidth * 0.8) / 13;
+	box.cols = (window.innerWidth * 0.9) / 12;
 	var startTime = document.getElementById("startTime");
 	var endTime = document.getElementById("endTime");
 	startTime.value = appointment.getAttribute("data-startTime");
@@ -315,7 +343,7 @@ function editAppointment(appointment) {
 	endTime.value = appointment.getAttribute("data-endTime");
 	box.value = appointment.getAttribute("data-details");
 
-	document.getElementById("coverDiv").style.visibility = "visible";
+	document.getElementById("mainBox").style.visibility = "visible";
 	var formDiv = document.getElementById("formDiv");
 	formDiv.style.visibility = "visible";
 
@@ -331,51 +359,3 @@ function removeAppointment(appointment) {
 }
 
 
-/*Creates the main table */
-
-function createOutsideTable() {
-	var main = document.getElementById("main");
-	var table = document.createElement("table");
-	main.appendChild(table);
-	table.style.width = '100%';
-	table.style.border = "1px solid black";
-	var row = document.createElement("tr");
-	table.appendChild(row);
-	var cell = document.createElement("td");
-	row.appendChild(cell);
-	createHoursTable(cell);
-	for (var i = 0; i < 7; i++) {
-
-	}
-
-	var tuesday = document.getElementById("tuesday");
-	td.innerHTML = "aaa";
-	tuesday.appendChild(tbl);
-}
-
-function tableCreate() {
-	var main = document.getElementById("main");
-	var tbl = document.createElement('table');
-	tbl.style.width = '100%';
-
-	var tr = tbl.insertRow();
-	main.appendChild(tbl);
-	for (var i = 0; i < 7; i++) {
-
-		var td;
-		tr.appendChild(td);
-	}
-
-}
-
-function createDayTable() {
-
-
-	for ( j = 0; j < 24; j++) {
-		var row = document.createElement('tr');
-		innerTable.appendChild(row);
-		var cell = row.insertCell();
-		cell.style.border = "1px solid black";
-	}
-	td.appendChild(innerTable);
-}

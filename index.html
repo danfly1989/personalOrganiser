@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Organiser</title>
 		<link rel="stylesheet" href="style.css">
 		<script src="script.js"></script>
+		<title>Planner</title>
 
 	</head>
 
@@ -21,42 +21,42 @@
 		</nav>
 		<!--############################################################# -->
 			<header>
-				<h1 id="temp"><em><u>Planner</u></em></h1>
+				<h1 id="planner"><em><u>Personal Planner</u></em></h1>
 			</header>
 
 			<div id="main">
 			<!-- create main table -->
-				<table class = "container">
+				<table class = "grid">
 					<tr>
 					<!-- create the hours table-->
-						<td class = "container">
+						<td class = "grid">
 						    <table id="hours"></table>
 						</td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="monday">
 						    </table>
 						</td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="tuesday">
 						    </table>
 					    </td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="wednesday">
 						    </table>
 					    </td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="thursday">
 						    </table>
 						</td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="friday">
 						    </table>
 						</td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="saturday">
 						    </table>
 					    </td>
-						<td class = "container">
+						<td class = "grid">
 						    <table id="sunday">
 						    </table>
 						</td>
@@ -66,11 +66,11 @@
 			</div>
 
 
-<div id="coverDiv">
+<div id="mainBox">
 
 <div id="formDiv" style="">
-	<form id="form" name="form" action="" method="get">
-						<p id = "errorText" class ="error"></p>
+	<form id="form" name="form" method="get">
+						<p id = "warningMessage" class ="error"></p>
 						<p>
 							Appointment details:
 						</p>
@@ -90,7 +90,7 @@
 								<option>Blue</option>
 								<option>Green</option>
 							</select>
-							<input type="button" name="submit" Value="Create" onClick="putDataIn(this.form)">
+							<input type="button" name="submit" Value="Create" onClick="enterDetails(this.form)">
 							<input type="button" name="cancel" Value="Cancel" onClick="closeForm(this.form)">
 						</p>
 					</form>
@@ -108,5 +108,26 @@
 
 		
 		</div>
+		
+		/*copied from cancel button function to decrease bugs*/
+		<script>
+	var details = form.details.value;
+	var startTime = document.getElementById("startTime").value;
+	var endTime = document.getElementById("endTime").value;
+	var duration = document.getElementById("duration").value;
+	var split = duration.split(":");
+	durationHour = parseInt(0);
+	durationMinutes = parseInt(split[1]);
+	("0" + durationHour).slice(-2);
+
+	if (durationInHours() > 8) {
+		durationError.innerText = " Duration must be 8 hours or less. ";
+		return;
+	}
+
+	if (endTime < startTime) {
+		durationError.innerText = " The appointment cannot extend to multiple days. ";
+	
+		</script>
 	</body>
 </html>

@@ -6,7 +6,7 @@ body {
 
 
 
-.container {
+.grid {
 	max-width: 10%;
 }
 
@@ -79,14 +79,14 @@ td{
 	width: 80%;
 }
 
-#temp{
+#planner{
     color:white;
     text-align: center;
 }
 
 
 
-#coverDiv {
+#mainBox {
 	position: absolute;
 	/*position: fixed;*/
 	top: 0px;
